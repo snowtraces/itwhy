@@ -33,7 +33,7 @@ public class AnsController {
     }
     
     @GetMapping("")
-    public ApiResult<AnsGetOutputDto> get(@Valid @RequestBody AnsGetInputDto inputDto) {
+    public ApiResult<AnsGetOutputDto> get(@Valid AnsGetInputDto inputDto) {
         return ApiResult.success(ansService.get(inputDto));
     }
 

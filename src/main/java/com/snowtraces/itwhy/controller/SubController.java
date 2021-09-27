@@ -34,7 +34,7 @@ public class SubController {
     }
 
     @GetMapping("")
-    public ApiResult<SubGetOutputDto> get(@Valid @RequestBody SubGetInputDto inputDto) {
+    public ApiResult<SubGetOutputDto> get(@Valid SubGetInputDto inputDto) {
         SubGetOutputDto outputDto = subService.get(inputDto);
         return ApiResult.success(outputDto);
     }
