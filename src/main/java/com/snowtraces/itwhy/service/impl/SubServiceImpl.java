@@ -2,23 +2,31 @@ package com.snowtraces.itwhy.service.impl;
 
 import com.baomidou.mybatisplus.extension.conditions.query.LambdaQueryChainWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.snowtraces.itwhy.dto.input.SubGetInputDto;
+import com.snowtraces.itwhy.dto.input.SubIdInputDto;
+import com.snowtraces.itwhy.dto.input.SubListInputDto;
 import com.snowtraces.itwhy.dto.input.SubSaveInputDto;
+import com.snowtraces.itwhy.dto.output.AnsGetOutputDto;
 import com.snowtraces.itwhy.dto.output.SubGetOutputDto;
+import com.snowtraces.itwhy.dto.output.SubListOutputDto;
 import com.snowtraces.itwhy.dto.output.SubSaveOutputDto;
 import com.snowtraces.itwhy.entity.Sub;
 import com.snowtraces.itwhy.entity.SubSrc;
 import com.snowtraces.itwhy.entity.User;
 import com.snowtraces.itwhy.repository.SubMapper;
-import com.snowtraces.itwhy.service.SubService;
-import com.snowtraces.itwhy.service.SubSrcService;
-import com.snowtraces.itwhy.service.UserService;
+import com.snowtraces.itwhy.service.*;
 import com.snowtraces.itwhy.util.Constants;
 import com.snowtraces.itwhy.util.DataConverter;
+import com.snowtraces.itwhy.util.ParamAssert;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import static com.snowtraces.itwhy.util.TransUtils.translate;
 
 /**
  * <p>
@@ -36,9 +44,17 @@ public class SubServiceImpl extends ServiceImpl<SubMapper, Sub> implements SubSe
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private AnsService ansService;
+
+    @Autowired
+    private TagSubService tagSubService;
+
     @Override
     public SubSaveOutputDto save(SubSaveInputDto inputDto) {
         String srcId = inputDto.getSrcId();
+        String tags = inputDto.getTags();
+        List<String> tagsList = tags == null ? Collections.emptyList() : Arrays.asList(tags.split(","));
         boolean isLocal = srcId == null;
 
         if (!isLocal) {
@@ -46,17 +62,14 @@ public class SubServiceImpl extends ServiceImpl<SubMapper, Sub> implements SubSe
             Sub exist = new LambdaQueryChainWrapper<>(baseMapper)
                     .eq(Sub::getSrcId, srcId)
                     .one();
-            if (exist != null) {
-                return new SubSaveOutputDto(exist.getSubId());
-            }
 
             // 1. 写源数据
             SubSrc subSrc = new SubSrc();
             subSrc.setSrcId(srcId);
-            subSrc.setIsTrans(Constants.NO);
+            subSrc.setIsTrans(Constants.YES);
             subSrc.setSubTitle(inputDto.getSubTitle());
             subSrc.setSubDesc(inputDto.getSubDesc());
-            subSrcService.save(subSrc);
+            subSrcService.saveOrUpdate(subSrc);
 
             // 2. 写用户信息
             User user = userService.addBySrc(inputDto.getSrcUserId(),
@@ -66,11 +79,18 @@ public class SubServiceImpl extends ServiceImpl<SubMapper, Sub> implements SubSe
             // 3. 写本地数据
             Sub sub = new Sub();
             sub.setSrcId(srcId);
-            sub.setSubTitle(inputDto.getSubTitle());
-            sub.setSubDesc(inputDto.getSubDesc());
+            if (exist != null) {
+                sub.setSubId(exist.getSubId());
+            }
+            sub.setSubTitle(translate(inputDto.getSubTitle()));
+            sub.setSubDesc(translate(inputDto.getSubDesc()));
             sub.setAddAt(LocalDateTime.now());
             sub.setAddBy(user.getUserId());
-            super.save(sub);
+            sub.setTags(tags);
+            super.saveOrUpdate(sub);
+
+            // 4. 保存标签
+            tagSubService.save(sub.getSubId(), tagsList);
 
             return new SubSaveOutputDto(sub.getSubId());
         } else {
@@ -80,14 +100,51 @@ public class SubServiceImpl extends ServiceImpl<SubMapper, Sub> implements SubSe
     }
 
     @Override
-    public SubGetOutputDto get(SubGetInputDto inputDto) {
+    public SubGetOutputDto get(SubIdInputDto inputDto) {
         Long subId = inputDto.getSubId();
+
+        // 1. 查询问题
         Sub sub = new LambdaQueryChainWrapper<>(baseMapper)
                 .eq(Sub::getSubId, subId)
                 .one();
+        ParamAssert.notBlank(sub, "没有找到数据：{}", inputDto.getSubId());
         SubGetOutputDto outputDto = DataConverter.toBean(sub, SubGetOutputDto.class);
         userService.forName(outputDto);
+
+        // 2. 查询回答
+        List<AnsGetOutputDto> ansList = ansService.listBySubId(subId);
+        outputDto.setAnsList(ansList);
+
         return outputDto;
-        
+
+    }
+
+    @Override
+    public void delete(SubIdInputDto inputDto) {
+        super.removeById(inputDto.getSubId());
+    }
+
+    @Override
+    public List<SubListOutputDto> list(SubListInputDto inputDto) {
+        String query = inputDto.getQuery();
+        List<Sub> subList = new LambdaQueryChainWrapper<>(baseMapper)
+                .select(Sub::getSubId,
+                        Sub::getSubTitle,
+                        Sub::getAddBy,
+                        Sub::getAddAt,
+                        Sub::getTags)
+                .like(query != null && !query.isEmpty(), Sub::getSubTitle, query)
+                .orderByDesc(Sub::getAddAt)
+                .list();
+        if (subList == null || subList.isEmpty()) {
+            return Collections.emptyList();
+        } else {
+            return subList.stream().map(sub -> {
+                SubListOutputDto outputDto = DataConverter.toBean(sub, SubListOutputDto.class);
+                userService.forName(outputDto);
+                return outputDto;
+            }).collect(Collectors.toList());
+        }
+
     }
 }

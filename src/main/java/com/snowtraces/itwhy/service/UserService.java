@@ -28,5 +28,5 @@ public interface UserService extends IService<User> {
      *
      * @param obj
      */
-    void forName(Object obj);
+    <T> T forName(T obj);
 }

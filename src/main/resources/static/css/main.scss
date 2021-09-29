@@ -1,0 +1,185 @@
+@import "common.css";
+
+$max-width: 900px;
+
+#main-wrapper {
+  max-width: $max-width;
+  margin: auto;
+  padding: 16px;
+
+  .author {
+    display: none;
+  }
+
+  #home-search {
+    margin-top: 40px;
+
+    .search input {
+      border: 1px solid #eee;
+      width: 100%;
+      padding: 13px;
+      font-size: 18px;
+      line-height: 24px;
+      box-shadow: 1px 1px 3px -1px #ddd;
+      border-radius: 2px;
+      background-color: #fff;
+    }
+  }
+
+  #home-list {
+    margin-top: 20px;
+    border-radius: 3px;
+
+    .item {
+      background: #fff;
+      margin-bottom: 1px;
+      display: flex;
+
+      .item-tags {
+        flex: 0 0 auto;
+        display: none;
+
+        a {
+          padding: 3px 5px;
+          background: #eee;
+          border-radius: 3px;
+        }
+      }
+
+      .item-title {
+        flex: 1 1 auto;
+
+        a {
+          display: inline-block;
+          padding: 8px 12px;
+          width: 100%;
+          transition: all 0.3s;
+
+          &:hover {
+            background: #eee;
+          }
+        }
+      }
+    }
+  }
+
+  @mixin content-a {
+    color: #0a95ff;
+    text-decoration: underline;
+  }
+
+  @mixin content-pre {
+    background: #f6f6f6;
+    padding: .5rem;
+    margin: .6rem 0;
+    border-radius: 3px;
+    overflow-x: auto;
+    > code {
+      font-size: 13px;
+      font-family: var(--ff-mono);
+    }
+  }
+
+  @mixin content-table {
+    width: 100%;
+    font-size: 13px;
+    border-collapse: collapse;
+    th, td {
+      border: 1px solid #aaa;
+      padding: 3px 5px;
+      text-align: left;
+    }
+    th {
+      background: #f5f5f5;
+    }
+  }
+
+  @mixin content-bq {
+    border-left: 3px solid #999;
+    margin: 1rem 1rem 1rem 0.5rem;
+    padding-left: 0.75rem;
+  }
+
+  #main-sub {
+    margin-top: 20px;
+    margin-bottom: 20px;
+    background: #fff;
+    padding: 8px 16px;
+    border-radius: 3px;
+    box-shadow: 1px 1px 8px 0 #ddd;
+
+    .sub-title {
+
+    }
+
+    .sub-desc {
+      margin-top: 10px;
+      line-height: 1.5;
+
+      a {
+        @include content-a()
+      }
+
+      table {
+        @include content-table()
+      }
+
+      pre {
+        @include content-pre
+      }
+
+      blockquote {
+        @include content-bq()
+      }
+    }
+  }
+
+  #main-ans-list {
+
+    .ans {
+      padding: 8px 16px;
+      margin-bottom: 16px;
+      background: #fff;
+      border-radius: 3px;
+      box-shadow: 1px 1px 8px 0 #ddd;
+      position: relative;
+
+      &:after {
+        content: "回答";
+        display: block;
+        position: absolute;
+        right: 0;
+        top: 0;
+        background: #eee;
+        padding: 4px 8px;
+        font-size: 0.5rem;
+        opacity: 0.7;
+        border-radius: 0 0 0 3px;
+      }
+
+      &:hover {
+        &:after {
+          opacity: 1;
+        }
+      }
+
+      a {
+        @include content-a()
+      }
+
+      table {
+        @include content-table()
+      }
+
+      pre {
+        @include content-pre
+      }
+
+      blockquote {
+        @include content-bq()
+      }
+    }
+
+  }
+
+}

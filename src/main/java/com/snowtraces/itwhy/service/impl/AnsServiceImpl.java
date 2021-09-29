@@ -19,6 +19,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import static com.snowtraces.itwhy.util.TransUtils.translate;
 
 /**
  * <p>
@@ -47,16 +52,14 @@ public class AnsServiceImpl extends ServiceImpl<AnsMapper, Ans> implements AnsSe
             Ans exist = new LambdaQueryChainWrapper<>(baseMapper)
                     .eq(Ans::getSrcId, srcId)
                     .one();
-            if (exist != null) {
-                return new AnsSaveOutputDto(exist.getAnsId());
-            }
+         
 
             // 1. 写源数据
             AnsSrc ansSrc = new AnsSrc();
             ansSrc.setSrcId(srcId);
-            ansSrc.setIsTrans(Constants.NO);
+            ansSrc.setIsTrans(Constants.YES);
             ansSrc.setAnsDesc(inputDto.getAnsDesc());
-            ansSrcService.save(ansSrc);
+            ansSrcService.saveOrUpdate(ansSrc);
 
             // 2. 写用户信息
             User user = userService.addBySrc(inputDto.getSrcUserId(),
@@ -66,11 +69,14 @@ public class AnsServiceImpl extends ServiceImpl<AnsMapper, Ans> implements AnsSe
             // 3. 写本地数据
             Ans ans = new Ans();
             ans.setSrcId(srcId);
-            ans.setAnsDesc(inputDto.getAnsDesc());
+            if (exist != null) {
+                ans.setAnsId(exist.getAnsId());
+            }
+            ans.setAnsDesc(translate(inputDto.getAnsDesc()));
             ans.setAddAt(LocalDateTime.now());
             ans.setAddBy(user.getUserId());
             ans.setSubId(inputDto.getSubId());
-            super.save(ans);
+            super.saveOrUpdate(ans);
 
             return new AnsSaveOutputDto(ans.getAnsId());
         } else {
@@ -88,5 +94,22 @@ public class AnsServiceImpl extends ServiceImpl<AnsMapper, Ans> implements AnsSe
         AnsGetOutputDto outputDto = DataConverter.toBean(ans, AnsGetOutputDto.class);
         userService.forName(outputDto);
         return outputDto;
+    }
+
+    @Override
+    public List<AnsGetOutputDto> listBySubId(Long subId) {
+        List<Ans> list = new LambdaQueryChainWrapper<>(baseMapper)
+                .eq(Ans::getSubId, subId)
+                .list();
+
+        if (list != null && !list.isEmpty()) {
+            return list.stream().map(ans -> {
+                AnsGetOutputDto outputDto = DataConverter.toBean(ans, AnsGetOutputDto.class);
+                userService.forName(outputDto);
+                return outputDto;
+            }).collect(Collectors.toList());
+        } else {
+            return Collections.emptyList();
+        }
     }
 }

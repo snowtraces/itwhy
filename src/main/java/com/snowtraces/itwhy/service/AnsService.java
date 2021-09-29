@@ -7,6 +7,8 @@ import com.snowtraces.itwhy.dto.output.AnsGetOutputDto;
 import com.snowtraces.itwhy.dto.output.AnsSaveOutputDto;
 import com.snowtraces.itwhy.entity.Ans;
 
+import java.util.List;
+
 /**
  * <p>
  * 答案 服务类
@@ -33,4 +35,5 @@ public interface AnsService extends IService<Ans> {
      */
     AnsGetOutputDto get(AnsGetInputDto inputDto);
 
+    List<AnsGetOutputDto> listBySubId(Long subId);
 }

@@ -7,7 +7,6 @@ import lombok.experimental.Accessors;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.List;
 
 /**
  * <p>
@@ -20,7 +19,7 @@ import java.util.List;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
-public class SubGetOutputDto implements Serializable {
+public class SubListOutputDto implements Serializable {
 
     /**
      * 问题ID
@@ -31,11 +30,6 @@ public class SubGetOutputDto implements Serializable {
      * 问题标题
      */
     private String subTitle;
-
-    /**
-     * 问题详情
-     */
-    private String subDesc;
 
     /**
      * 人员ID
@@ -52,16 +46,6 @@ public class SubGetOutputDto implements Serializable {
      * 添加时间
      */
     private LocalDateTime addAt;
-
-    /**
-     * 来源ID
-     */
-    private String srcId;
-
-    /**
-     * 答案集合
-     */
-    List<AnsGetOutputDto> ansList;
 
     /**
      * tags

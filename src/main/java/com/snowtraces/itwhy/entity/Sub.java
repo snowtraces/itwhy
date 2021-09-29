@@ -57,5 +57,8 @@ public class Sub implements Serializable {
      */
     private String srcId;
 
-
+    /**
+     * tags
+     */
+    private String tags;
 }

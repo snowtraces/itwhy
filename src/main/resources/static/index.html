@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IT WHY</title>
+</head>
+
+<body>
+<script>
+    if (!location.hostname.match(/^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$/)
+        && location.hostname !== 'localhost'
+    ) {
+        if (location.protocol === 'http:') {
+            // https 跳转
+            location.href = 'https:' + location.href.substring(window.location.protocol.length)
+        }
+    }
+</script>
+
+<nav id="nav">
+
+</nav>
+<main id="main">
+    <div id="main-wrapper">
+    </div>
+</main>
+<footer id="footer"></footer>
+
+<script src="./js/main.js?version=20210824xx"></script>
+</body>
+
+</html>

@@ -1,10 +1,9 @@
 package com.snowtraces.itwhy.dto.input;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
-
-import java.io.Serializable;
 
 /**
  * <p>
@@ -17,21 +16,11 @@ import java.io.Serializable;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
-public class SubSaveInputDto extends BaseSrcDto implements Serializable {
+public class SubIdInputDto {
 
     /**
-     * 问题标题
+     * 问题ID
      */
-    private String subTitle;
-
-    /**
-     * 问题详情
-     */
-    private String subDesc;
-
-    /**
-     * tags
-     */
-    private String tags;
-
+    @NotNull
+    private Long subId;
 }

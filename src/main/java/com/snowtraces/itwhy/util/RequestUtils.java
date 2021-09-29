@@ -22,10 +22,8 @@ import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import java.io.*;
 import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.time.LocalDateTime;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Log4j2
@@ -33,6 +31,14 @@ public class RequestUtils {
     private static CookieStore cookieStore = new BasicCookieStore();
     private final static String USER_AGENT_CHROME = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/93.0.4577.82 Safari/537.36 Edg/93.0.961.52";
     private static ScriptEngine engine = new ScriptEngineManager().getEngineByName("JavaScript");
+
+    static List<String> googleTransClientList = Arrays.asList(
+            "gtx",
+            "t",
+            "dict-chrome-ex"
+    );
+    private static LocalDateTime nextTime = LocalDateTime.now();
+    private static int idxOfClient = 0;
 
     /**
      * 请求
@@ -50,6 +56,10 @@ public class RequestUtils {
             } else {
                 log.error("Unexpected response status: " + status);
                 log.error(url);
+//                idxOfClient = (idxOfClient + 1) % googleTransClientList.size();
+                if (status == 429) {
+                    nextTime = LocalDateTime.now().plusHours(1L);
+                }
                 return null;
             }
 
@@ -176,8 +186,11 @@ public class RequestUtils {
     }
 
     public static String translate(String query) {
+        if (nextTime.compareTo(LocalDateTime.now()) > 0) {
+            return query;
+        }
 
-        Map<String, String> params = new HashMap<>();    //统一采用post，若字符长度小于999用get也可以的
+        Map<String, String> params = new HashMap<>();
         String tk = null;
         try {
             tk = tk(query);
@@ -185,19 +198,12 @@ public class RequestUtils {
             e.printStackTrace();
         }
 
-        params.put("client", "t");
+        params.put("client", googleTransClientList.get(idxOfClient));
         params.put("sl", "en");
         params.put("tl", "zh-CN");
-        params.put("hl", "zh-CN");
+        params.put("hl", "en");
         params.put("dt", "at");
         params.put("dt", "bd");
-        params.put("dt", "ex");
-        params.put("dt", "ld");
-        params.put("dt", "md");
-        params.put("dt", "qca");
-        params.put("dt", "rw");
-        params.put("dt", "rm");
-        params.put("dt", "ss");
         params.put("dt", "t");
         params.put("ie", "UTF-8");
         params.put("oe", "UTF-8");
@@ -251,5 +257,24 @@ public class RequestUtils {
         return (String) inv.invokeFunction("tk", val);
     }
 
+
+    public static void main(String[] args) {
+        String translate = translate("\nshow time" +
+                "<pre translate=\"no\" class=\"lang-js s-code-block\"><code class=\"hljs language-javascript\"><span class=\"hljs-title class_\">Array</span>.<span class=\"hljs-property\"><span class=\"hljs-keyword\">prototype</span></span>.<span class=\"hljs-property\">remove_by_value</span> = <span class=\"hljs-keyword\">function</span>(<span class=\"hljs-params\">val</span>) {\n" +
+                " <span class=\"hljs-keyword\">for</span> (<span class=\"hljs-keyword\">var</span> i = <span class=\"hljs-number\">0</span>; i &lt; <span class=\"hljs-variable language_\">this</span>.<span class=\"hljs-property\">length</span>; i++) {\n" +
+                "  <span class=\"hljs-keyword\">if</span> (<span class=\"hljs-variable language_\">this</span>[i] === val) {\n" +
+                "   <span class=\"hljs-variable language_\">this</span>.<span class=\"hljs-title function_\">splice</span>(i, <span class=\"hljs-number\">1</span>);\n" +
+                "   i--;\n" +
+                "  }\n" +
+                " }\n" +
+                " <span class=\"hljs-keyword\">return</span> <span class=\"hljs-variable language_\">this</span>;\n" +
+                "}[\n" +
+                " <span class=\"hljs-comment\">// call like</span>\n" +
+                " (<span class=\"hljs-number\">1</span>, <span class=\"hljs-number\">2</span>, <span class=\"hljs-number\">3</span>, <span class=\"hljs-number\">4</span>)\n" +
+                "].<span class=\"hljs-title function_\">remove_by_value</span>(<span class=\"hljs-number\">3</span>);\n" +
+                "</code></pre>\n" +
+                "    ");
+        System.err.println(translate);
+    }
 
 }

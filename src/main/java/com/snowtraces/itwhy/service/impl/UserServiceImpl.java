@@ -43,12 +43,12 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     }
 
     @Override
-    public void forName(Object obj) {
-        if (obj == null) {
-            return;
+    public <T> T forName(T t) {
+        if (t == null) {
+            return null;
         }
 
-        Class<?> clazz = obj.getClass();
+        Class<?> clazz = t.getClass();
         Field[] fields = clazz.getDeclaredFields();
         Arrays.stream(fields).forEach(f -> {
             SetData setData = f.getAnnotation(SetData.class);
@@ -57,7 +57,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
                     String value = setData.value();
                     Field from = clazz.getDeclaredField(value);
                     from.setAccessible(true);
-                    Object fromValue = from.get(obj);
+                    Object fromValue = from.get(t);
                     if (fromValue != null) {
                         Long id = (Long) fromValue;
                         User user = new LambdaQueryChainWrapper<>(baseMapper)
@@ -66,7 +66,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
                                 .one();
                         if (user != null) {
                             f.setAccessible(true);
-                            f.set(obj, user.getUserName());
+                            f.set(t, user.getUserName());
                         }
                     }
                 } catch (Exception e) {
@@ -75,6 +75,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             }
         });
 
-
+        return t;
     }
 }

@@ -1,6 +1,5 @@
 package com.snowtraces.itwhy.dto.input;
 
-import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
@@ -16,11 +15,9 @@ import lombok.experimental.Accessors;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
-public class SubGetInputDto {
-
+public class SubListInputDto {
     /**
-     * 问题ID
+     * 查询关键字
      */
-    @NotNull
-    private Long subId;
+    private String query;
 }

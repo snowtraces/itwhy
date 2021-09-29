@@ -1,7 +1,9 @@
 package com.snowtraces.itwhy.service;
 
-import com.snowtraces.itwhy.entity.Tag;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.snowtraces.itwhy.entity.Tag;
+
+import java.util.List;
 
 /**
  * <p>
@@ -13,4 +15,11 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface TagService extends IService<Tag> {
 
+    /**
+     * 标签转id
+     *
+     * @param tags
+     * @return
+     */
+    List<Long> fromName(List<String> tags);
 }
