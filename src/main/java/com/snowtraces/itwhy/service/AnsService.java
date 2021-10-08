@@ -1,6 +1,7 @@
 package com.snowtraces.itwhy.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.snowtraces.itwhy.dto.input.AnsEditInputDto;
 import com.snowtraces.itwhy.dto.input.AnsGetInputDto;
 import com.snowtraces.itwhy.dto.input.AnsSaveInputDto;
 import com.snowtraces.itwhy.dto.output.AnsGetOutputDto;
@@ -36,4 +37,12 @@ public interface AnsService extends IService<Ans> {
     AnsGetOutputDto get(AnsGetInputDto inputDto);
 
     List<AnsGetOutputDto> listBySubId(Long subId);
+
+    /**
+     * 内容编辑
+     *
+     * @param inputDto
+     * @return
+     */
+    AnsSaveOutputDto edit(AnsEditInputDto inputDto);
 }

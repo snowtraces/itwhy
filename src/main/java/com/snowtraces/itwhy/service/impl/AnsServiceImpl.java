@@ -1,7 +1,9 @@
 package com.snowtraces.itwhy.service.impl;
 
 import com.baomidou.mybatisplus.extension.conditions.query.LambdaQueryChainWrapper;
+import com.baomidou.mybatisplus.extension.conditions.update.LambdaUpdateChainWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.snowtraces.itwhy.dto.input.AnsEditInputDto;
 import com.snowtraces.itwhy.dto.input.AnsGetInputDto;
 import com.snowtraces.itwhy.dto.input.AnsSaveInputDto;
 import com.snowtraces.itwhy.dto.output.AnsGetOutputDto;
@@ -52,7 +54,7 @@ public class AnsServiceImpl extends ServiceImpl<AnsMapper, Ans> implements AnsSe
             Ans exist = new LambdaQueryChainWrapper<>(baseMapper)
                     .eq(Ans::getSrcId, srcId)
                     .one();
-         
+
 
             // 1. 写源数据
             AnsSrc ansSrc = new AnsSrc();
@@ -111,5 +113,14 @@ public class AnsServiceImpl extends ServiceImpl<AnsMapper, Ans> implements AnsSe
         } else {
             return Collections.emptyList();
         }
+    }
+
+    @Override
+    public AnsSaveOutputDto edit(AnsEditInputDto inputDto) {
+        new LambdaUpdateChainWrapper<>(baseMapper)
+                .eq(Ans::getAnsId, inputDto.getAnsId())
+                .set(Ans::getAnsDesc, inputDto.getAnsDesc())
+                .update();
+        return new AnsSaveOutputDto(inputDto.getAnsId());
     }
 }

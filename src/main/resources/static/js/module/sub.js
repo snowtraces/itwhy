@@ -2,10 +2,10 @@
     let view = {
         el: '#main-wrapper',
         template: `
-        <div id="main-sub">
+        <div class="main-sub">
 
         </div>
-        <div id="main-ans-list">
+        <div class="main-ans-list">
         </div>`,
         render(data) {
             $.el(this.el).innerHTML = $.evalTemplate(this.template, data)
@@ -22,6 +22,39 @@
             this.bindEventHub()
         },
         bindEvents() {
+            $.bindEvent(".main-ans-list .ans", "dblclick", (e, from) => {
+                if (e.shiftKey) {
+                    let target = from.querySelector(".ans-desc")
+                    let ansId = from.dataset.id
+                    let ansData = this.model.sub.ansList.filter(x => x.ansId === ansId)[0]
+
+                    target.textContent = ansData.ansDesc
+                    target.contentEditable = true
+                    target.style.whiteSpace = 'pre-line'
+
+                    let editBtn = document.createElement("button")
+                    editBtn.innerText = "保存"
+                    editBtn.classList.add("ans-save-btn")
+                    from.append(editBtn)
+
+                    editBtn.onclick = () => {
+                        let ansDesc = target.textContent
+
+                        $.request("https://my.snowtraces.com/qa/api/v1/ans", {ansId, ansDesc}, "PUT")
+                            .then((res) => {
+                                if (res.success) {
+                                    target.innerHTML = ansDesc
+                                    target.contentEditable = false
+                                    target.style.whiteSpace = 'inherit'
+                                    editBtn.remove()
+
+                                    ansData.ansDesc = ansDesc
+                                    Prism.highlightAll()
+                                }
+                            })
+                    }
+                }
+            })
 
         },
         bindEventHub() {
@@ -33,20 +66,23 @@
         onload(subId) {
             $.get("https://my.snowtraces.com/qa/api/v1/sub", {subId}).then((res) => {
                 let sub = res.data || []
-                $.el("#main-sub").innerHTML = `
-                    <div class="sub-title"><h1>${sub.subTitle}</h1></div>
+                this.model.sub = sub
+                $.el(".main-sub").innerHTML = `
+                    <div class="sub-title" data-id="${sub.subId}"><h1>${sub.subTitle}</h1></div>
                     <div class="sub-desc">${sub.subDesc}</div>
                     <div class="author">${sub.addByName}</div>`
 
                 if (sub.ansList.length) {
-                    $.el("#main-ans-list").innerHTML = sub.ansList.map(ans => `
-                        <div class="ans">
+                    $.el(".main-ans-list").innerHTML = sub.ansList.map(ans => `
+                        <div class="ans" data-id="${ans.ansId}">
                             <div class="ans-desc">${ans.ansDesc}</div>
                             <div class="author">${ans.addByName}</div>
                         </div>
                        `).join("\n")
                 }
                 Prism.highlightAll()
+
+
             })
 
         }

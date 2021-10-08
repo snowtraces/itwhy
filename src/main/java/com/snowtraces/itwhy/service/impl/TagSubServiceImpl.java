@@ -36,6 +36,11 @@ public class TagSubServiceImpl extends ServiceImpl<TagSubMapper, TagSub> impleme
             return;
         }
 
+        List<TagSubOutputDto> exists = listBySubId(subId);
+        if (exists != null && !exists.isEmpty()) {
+            return;
+        }
+
         // 1. 标签 name -> id
         List<Long> tagIds = tagService.fromName(tags);
 

@@ -2,13 +2,11 @@ package com.snowtraces.itwhy.service.impl;
 
 import com.baomidou.mybatisplus.extension.conditions.query.LambdaQueryChainWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.snowtraces.itwhy.dto.input.SubGetInputDto;
 import com.snowtraces.itwhy.dto.input.SubIdInputDto;
 import com.snowtraces.itwhy.dto.input.SubListInputDto;
 import com.snowtraces.itwhy.dto.input.SubSaveInputDto;
-import com.snowtraces.itwhy.dto.output.AnsGetOutputDto;
-import com.snowtraces.itwhy.dto.output.SubGetOutputDto;
-import com.snowtraces.itwhy.dto.output.SubListOutputDto;
-import com.snowtraces.itwhy.dto.output.SubSaveOutputDto;
+import com.snowtraces.itwhy.dto.output.*;
 import com.snowtraces.itwhy.entity.Sub;
 import com.snowtraces.itwhy.entity.SubSrc;
 import com.snowtraces.itwhy.entity.User;
@@ -100,7 +98,7 @@ public class SubServiceImpl extends ServiceImpl<SubMapper, Sub> implements SubSe
     }
 
     @Override
-    public SubGetOutputDto get(SubIdInputDto inputDto) {
+    public SubGetOutputDto get(SubGetInputDto inputDto) {
         Long subId = inputDto.getSubId();
 
         // 1. 查询问题
@@ -114,6 +112,12 @@ public class SubServiceImpl extends ServiceImpl<SubMapper, Sub> implements SubSe
         // 2. 查询回答
         List<AnsGetOutputDto> ansList = ansService.listBySubId(subId);
         outputDto.setAnsList(ansList);
+
+        // 3. 查询源内容
+        if (inputDto.isQuerySrc()) {
+            SubSrc subSrc = subSrcService.getById(sub.getSrcId());
+            outputDto.setSubSrc(DataConverter.toBean(subSrc, SubSrcOutputDto.class));
+        }
 
         return outputDto;
 

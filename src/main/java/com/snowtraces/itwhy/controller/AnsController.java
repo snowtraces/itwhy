@@ -2,6 +2,7 @@ package com.snowtraces.itwhy.controller;
 
 
 import com.snowtraces.itwhy.dto.common.ApiResult;
+import com.snowtraces.itwhy.dto.input.AnsEditInputDto;
 import com.snowtraces.itwhy.dto.input.AnsGetInputDto;
 import com.snowtraces.itwhy.dto.input.AnsSaveInputDto;
 import com.snowtraces.itwhy.dto.output.AnsGetOutputDto;
@@ -29,6 +30,12 @@ public class AnsController {
     @PostMapping("")
     public ApiResult<AnsSaveOutputDto> save(@Valid @RequestBody AnsSaveInputDto inputDto) {
         AnsSaveOutputDto outputDto = ansService.save(inputDto);
+        return ApiResult.success(outputDto);
+    }
+    
+    @PutMapping("")
+    public ApiResult<AnsSaveOutputDto> edit(@Valid @RequestBody AnsEditInputDto inputDto) {
+        AnsSaveOutputDto outputDto = ansService.edit(inputDto);
         return ApiResult.success(outputDto);
     }
     

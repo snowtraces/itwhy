@@ -2,6 +2,7 @@ package com.snowtraces.itwhy.controller;
 
 
 import com.snowtraces.itwhy.dto.common.ApiResult;
+import com.snowtraces.itwhy.dto.input.SubGetInputDto;
 import com.snowtraces.itwhy.dto.input.SubIdInputDto;
 import com.snowtraces.itwhy.dto.input.SubListInputDto;
 import com.snowtraces.itwhy.dto.input.SubSaveInputDto;
@@ -37,7 +38,7 @@ public class SubController {
     }
 
     @GetMapping("")
-    public ApiResult<SubGetOutputDto> get(@Valid SubIdInputDto inputDto) {
+    public ApiResult<SubGetOutputDto> get(@Valid SubGetInputDto inputDto) {
         SubGetOutputDto outputDto = subService.get(inputDto);
         return ApiResult.success(outputDto);
     }

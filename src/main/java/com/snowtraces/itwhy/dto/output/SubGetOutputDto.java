@@ -67,4 +67,9 @@ public class SubGetOutputDto implements Serializable {
      * tags
      */
     private String tags;
+
+    /**
+     * 源数据
+     */
+    private SubSrcOutputDto subSrc;
 }

@@ -1,6 +1,7 @@
 package com.snowtraces.itwhy.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.snowtraces.itwhy.dto.input.SubGetInputDto;
 import com.snowtraces.itwhy.dto.input.SubIdInputDto;
 import com.snowtraces.itwhy.dto.input.SubListInputDto;
 import com.snowtraces.itwhy.dto.input.SubSaveInputDto;
@@ -35,7 +36,7 @@ public interface SubService extends IService<Sub> {
      * @param inputDto
      * @return
      */
-    SubGetOutputDto get(SubIdInputDto inputDto);
+    SubGetOutputDto get(SubGetInputDto inputDto);
 
     /**
      * 删除主题
