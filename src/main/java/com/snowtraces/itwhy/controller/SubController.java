@@ -2,10 +2,8 @@ package com.snowtraces.itwhy.controller;
 
 
 import com.snowtraces.itwhy.dto.common.ApiResult;
-import com.snowtraces.itwhy.dto.input.SubGetInputDto;
-import com.snowtraces.itwhy.dto.input.SubIdInputDto;
-import com.snowtraces.itwhy.dto.input.SubListInputDto;
-import com.snowtraces.itwhy.dto.input.SubSaveInputDto;
+import com.snowtraces.itwhy.dto.input.*;
+import com.snowtraces.itwhy.dto.output.AnsSaveOutputDto;
 import com.snowtraces.itwhy.dto.output.SubGetOutputDto;
 import com.snowtraces.itwhy.dto.output.SubListOutputDto;
 import com.snowtraces.itwhy.dto.output.SubSaveOutputDto;
@@ -53,6 +51,12 @@ public class SubController {
     public ApiResult<List<SubListOutputDto>> list(@Valid SubListInputDto inputDto) {
         List<SubListOutputDto> outputDtoList = subService.list(inputDto);
         return ApiResult.success(outputDtoList);
+    }
+    
+    @PutMapping("")
+    public ApiResult<SubSaveOutputDto> edit(@Valid @RequestBody SubEditInputDto inputDto) {
+        SubSaveOutputDto outputDto = subService.edit(inputDto);
+        return ApiResult.success(outputDto);
     }
 }
 

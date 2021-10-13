@@ -11,6 +11,10 @@ $max-width: 900px;
     display: none;
   }
 
+  .snippet-result {
+    display: none;
+  }
+
   #home-search {
     margin-top: 40px;
 
@@ -70,13 +74,14 @@ $max-width: 900px;
 
   @mixin content-pre {
     background: #f6f6f6;
-    padding: .5rem;
+    padding: .8rem;
     margin: .6rem 0;
     border-radius: 3px;
     overflow-x: auto;
+    font-family: var(--ff-mono);
+    font-size: 13px;
     > code {
-      font-size: 13px;
-      font-family: var(--ff-mono);
+      font-family: inherit;
     }
   }
 
@@ -84,9 +89,10 @@ $max-width: 900px;
     width: 100%;
     font-size: 13px;
     border-collapse: collapse;
+    border-spacing: 0;
     th, td {
-      border: 1px solid #aaa;
-      padding: 3px 5px;
+      border: 1px solid #ccc;
+      padding: 6px;
       text-align: left;
     }
     th {
@@ -107,9 +113,19 @@ $max-width: 900px;
     padding: 8px 16px;
     border-radius: 3px;
     box-shadow: 1px 1px 8px 0 #ddd;
+    position: relative;
 
     .sub-title {
 
+    }
+
+    .sub-save-btn {
+      position: absolute;
+      right: 10px;
+      bottom: 10px;
+      padding: 5px 8px;
+      background: #ccc;
+      opacity: 0.8;
     }
 
     .sub-desc {
@@ -171,20 +187,22 @@ $max-width: 900px;
         }
       }
 
-      a {
-        @include content-a()
-      }
+      .ans-desc {
+        a {
+          @include content-a()
+        }
 
-      table {
-        @include content-table()
-      }
+        table {
+          @include content-table()
+        }
 
-      pre {
-        @include content-pre
-      }
+        pre {
+          @include content-pre
+        }
 
-      blockquote {
-        @include content-bq()
+        blockquote {
+          @include content-bq()
+        }
       }
     }
 

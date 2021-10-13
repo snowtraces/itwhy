@@ -1,10 +1,7 @@
 package com.snowtraces.itwhy.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.snowtraces.itwhy.dto.input.SubGetInputDto;
-import com.snowtraces.itwhy.dto.input.SubIdInputDto;
-import com.snowtraces.itwhy.dto.input.SubListInputDto;
-import com.snowtraces.itwhy.dto.input.SubSaveInputDto;
+import com.snowtraces.itwhy.dto.input.*;
 import com.snowtraces.itwhy.dto.output.SubGetOutputDto;
 import com.snowtraces.itwhy.dto.output.SubListOutputDto;
 import com.snowtraces.itwhy.dto.output.SubSaveOutputDto;
@@ -54,4 +51,11 @@ public interface SubService extends IService<Sub> {
      */
     List<SubListOutputDto> list(SubListInputDto inputDto);
 
+    /**
+     * 更新主题
+     *
+     * @param inputDto
+     * @return
+     */
+    SubSaveOutputDto edit(SubEditInputDto inputDto);
 }

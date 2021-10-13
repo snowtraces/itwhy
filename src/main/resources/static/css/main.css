@@ -8,6 +8,9 @@
 #main-wrapper .author {
   display: none;
 }
+#main-wrapper .snippet-result {
+  display: none;
+}
 #main-wrapper #home-search {
   margin-top: 40px;
 }
@@ -58,6 +61,15 @@
   padding: 8px 16px;
   border-radius: 3px;
   box-shadow: 1px 1px 8px 0 #ddd;
+  position: relative;
+}
+#main-wrapper .main-sub .sub-save-btn {
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+  padding: 5px 8px;
+  background: #ccc;
+  opacity: 0.8;
 }
 #main-wrapper .main-sub .sub-desc {
   margin-top: 10px;
@@ -71,10 +83,11 @@
   width: 100%;
   font-size: 13px;
   border-collapse: collapse;
+  border-spacing: 0;
 }
 #main-wrapper .main-sub .sub-desc table th, #main-wrapper .main-sub .sub-desc table td {
-  border: 1px solid #aaa;
-  padding: 3px 5px;
+  border: 1px solid #ccc;
+  padding: 6px;
   text-align: left;
 }
 #main-wrapper .main-sub .sub-desc table th {
@@ -82,14 +95,15 @@
 }
 #main-wrapper .main-sub .sub-desc pre {
   background: #f6f6f6;
-  padding: 0.5rem;
+  padding: 0.8rem;
   margin: 0.6rem 0;
   border-radius: 3px;
   overflow-x: auto;
+  font-family: var(--ff-mono);
+  font-size: 13px;
 }
 #main-wrapper .main-sub .sub-desc pre > code {
-  font-size: 13px;
-  font-family: var(--ff-mono);
+  font-family: inherit;
 }
 #main-wrapper .main-sub .sub-desc blockquote {
   border-left: 3px solid #999;
@@ -127,35 +141,37 @@
 #main-wrapper .main-ans-list .ans:hover:after {
   opacity: 1;
 }
-#main-wrapper .main-ans-list .ans a {
+#main-wrapper .main-ans-list .ans .ans-desc a {
   color: #0a95ff;
   text-decoration: underline;
 }
-#main-wrapper .main-ans-list .ans table {
+#main-wrapper .main-ans-list .ans .ans-desc table {
   width: 100%;
   font-size: 13px;
   border-collapse: collapse;
+  border-spacing: 0;
 }
-#main-wrapper .main-ans-list .ans table th, #main-wrapper .main-ans-list .ans table td {
-  border: 1px solid #aaa;
-  padding: 3px 5px;
+#main-wrapper .main-ans-list .ans .ans-desc table th, #main-wrapper .main-ans-list .ans .ans-desc table td {
+  border: 1px solid #ccc;
+  padding: 6px;
   text-align: left;
 }
-#main-wrapper .main-ans-list .ans table th {
+#main-wrapper .main-ans-list .ans .ans-desc table th {
   background: #f5f5f5;
 }
-#main-wrapper .main-ans-list .ans pre {
+#main-wrapper .main-ans-list .ans .ans-desc pre {
   background: #f6f6f6;
-  padding: 0.5rem;
+  padding: 0.8rem;
   margin: 0.6rem 0;
   border-radius: 3px;
   overflow-x: auto;
-}
-#main-wrapper .main-ans-list .ans pre > code {
-  font-size: 13px;
   font-family: var(--ff-mono);
+  font-size: 13px;
 }
-#main-wrapper .main-ans-list .ans blockquote {
+#main-wrapper .main-ans-list .ans .ans-desc pre > code {
+  font-family: inherit;
+}
+#main-wrapper .main-ans-list .ans .ans-desc blockquote {
   border-left: 3px solid #999;
   margin: 1rem 1rem 1rem 0.5rem;
   padding-left: 0.75rem;

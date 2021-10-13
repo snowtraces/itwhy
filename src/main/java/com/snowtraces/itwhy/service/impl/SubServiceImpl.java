@@ -1,11 +1,9 @@
 package com.snowtraces.itwhy.service.impl;
 
 import com.baomidou.mybatisplus.extension.conditions.query.LambdaQueryChainWrapper;
+import com.baomidou.mybatisplus.extension.conditions.update.LambdaUpdateChainWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.snowtraces.itwhy.dto.input.SubGetInputDto;
-import com.snowtraces.itwhy.dto.input.SubIdInputDto;
-import com.snowtraces.itwhy.dto.input.SubListInputDto;
-import com.snowtraces.itwhy.dto.input.SubSaveInputDto;
+import com.snowtraces.itwhy.dto.input.*;
 import com.snowtraces.itwhy.dto.output.*;
 import com.snowtraces.itwhy.entity.Sub;
 import com.snowtraces.itwhy.entity.SubSrc;
@@ -17,6 +15,7 @@ import com.snowtraces.itwhy.util.DataConverter;
 import com.snowtraces.itwhy.util.ParamAssert;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
@@ -49,6 +48,7 @@ public class SubServiceImpl extends ServiceImpl<SubMapper, Sub> implements SubSe
     private TagSubService tagSubService;
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public SubSaveOutputDto save(SubSaveInputDto inputDto) {
         String srcId = inputDto.getSrcId();
         String tags = inputDto.getTags();
@@ -151,4 +151,15 @@ public class SubServiceImpl extends ServiceImpl<SubMapper, Sub> implements SubSe
         }
 
     }
+
+    @Override
+    public SubSaveOutputDto edit(SubEditInputDto inputDto) {
+        new LambdaUpdateChainWrapper<>(baseMapper)
+                .eq(Sub::getSubId, inputDto.getSubId())
+                .set(Sub::getSubDesc, inputDto.getSubDesc())
+                .set(Sub::getSubTitle, inputDto.getSubTitle())
+                .update();
+        return new SubSaveOutputDto(inputDto.getSubId());
+    }
+
 }

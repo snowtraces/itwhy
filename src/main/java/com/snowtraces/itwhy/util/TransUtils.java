@@ -27,8 +27,9 @@ public class TransUtils {
     private static List<String> notTransTags = Arrays.asList("pre", "svg", "table");
 
     public static String translate(String inString) {
-        List<Seg> segs = splitSentence(inString, notTransTags.get(0));
 
+        // 1. 非翻译块
+        List<Seg> segs = splitSentence(inString, notTransTags.get(0));
         if (notTransTags.size() > 1) {
             for (int i = 1; i < notTransTags.size(); i++) {
                 int finalI = i;
@@ -42,21 +43,30 @@ public class TransUtils {
             }
         }
 
-        String transSrc = segs.stream().filter(seg -> seg.getIsTrans())
+        // 2. 待翻译内容清理
+        String transSrc = segs.stream().filter(Seg::getIsTrans)
                 .map(Seg::getSrc)
                 .collect(Collectors.joining("\n<$>\n"))
                 .replaceAll("<p>", "<p>\n")
                 .replaceAll("</p>", "\n</p>")
-                .replaceAll("<blockquote>", "<blockquote translate=\"no\">");
+                .replaceAll("<(blockquote|code)>", "<$1 translate=\"no\">")
+                .replaceAll("<a ", "<a translate=\"no\" ");
 
+        // 3. 翻译
         String translated = RequestUtils.translate(transSrc);
         String[] transMeta = translated.split("<\\$>");
 
         AtomicInteger idx = new AtomicInteger(0);
-
         return segs.stream().map(seg -> {
             if (seg.isTrans) {
-                return transMeta[idx.getAndIncrement()];
+                String transText = transMeta[idx.getAndIncrement()];
+                // 4. 翻译结果清理
+                // 标签闭合，hr修正
+                transText = transText.replaceAll("< ?/ ?(a|code)>", "</$1>")
+                        .replaceAll("< (a|code) ", "<$1 ")
+                        .replaceAll("<小时>", "<hr>");
+                
+                return transText;
             } else {
                 return seg.src;
             }
@@ -77,8 +87,6 @@ public class TransUtils {
 
         List<Seg> segList = new ArrayList<>();
         while (matcher.find(start)) {
-            String group = matcher.group(0);
-
             // 生成分组数据
             int first = matcher.start();
             int end = matcher.end();
@@ -87,6 +95,7 @@ public class TransUtils {
             }
 
             String notTansString = inString.substring(first, end);
+            
             // 移除代码块中的span高亮内容
             if (tag.equals("pre")) {
                 notTansString = notTansString
@@ -117,16 +126,19 @@ public class TransUtils {
     }
 
 
-    private static String testString = "<p>\n" +
-            "我想编写一个循环遍历 15 个字符串（可能是数组？）的脚本，这可能吗？\n" +
-            "</p>\n" +
-            "\n" +
-            "<p>\n" +
-            "就像是：\n" +
-            "</p><pre class=\"lang-sh s-code-block\"><code class=\"hljs language-bash\"><span class=\"hljs-keyword\">for</span> databaseName <span class=\"hljs-keyword\">in</span> listOfNames\n" +
-            "<span class=\"hljs-keyword\">then</span>\n" +
-            "  <span class=\"hljs-comment\"># Do something</span>\n" +
-            "end\n" +
-            "</code></pre> ";
+    private static String testString = "<p>I don't know how you are expecting <code>array.remove(int)</code> to behave. There are three possibilities I can think of that you might want.</p>\n" +
+            "<p>To remove an element of an array at an index <code>i</code>:</p>\n" +
+            "<pre class=\"lang-js s-code-block\"><code class=\"hljs language-javascript\">array.<span class=\"hljs-title function_\">splice</span>(i, <span class=\"hljs-number\">1</span>);\n" +
+            "</code></pre>\n" +
+            "<p>If you want to remove every element with value <code>number</code> from the array:</p>\n" +
+            "<pre class=\"lang-js s-code-block\"><code class=\"hljs language-javascript\"><span class=\"hljs-keyword\">for</span> (<span class=\"hljs-keyword\">var</span> i = array.<span class=\"hljs-property\">length</span> - <span class=\"hljs-number\">1</span>; i &gt;= <span class=\"hljs-number\">0</span>; i--) {\n" +
+            " <span class=\"hljs-keyword\">if</span> (array[i] === number) {\n" +
+            "  array.<span class=\"hljs-title function_\">splice</span>(i, <span class=\"hljs-number\">1</span>);\n" +
+            " }\n" +
+            "}\n" +
+            "</code></pre>\n" +
+            "<p>If you just want to make the element at index <code>i</code> no longer exist, but you don't want the indexes of the other elements to change:</p>\n" +
+            "<pre class=\"lang-js s-code-block\"><code class=\"hljs language-javascript\"><span class=\"hljs-keyword\">delete</span> array[i];\n" +
+            "</code></pre>\n";
 
 }

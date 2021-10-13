@@ -19,6 +19,7 @@ import com.snowtraces.itwhy.util.Constants;
 import com.snowtraces.itwhy.util.DataConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.Collections;
@@ -45,6 +46,7 @@ public class AnsServiceImpl extends ServiceImpl<AnsMapper, Ans> implements AnsSe
     private UserService userService;
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public AnsSaveOutputDto save(AnsSaveInputDto inputDto) {
         String srcId = inputDto.getSrcId();
         boolean isLocal = srcId == null;

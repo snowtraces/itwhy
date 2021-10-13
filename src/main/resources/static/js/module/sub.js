@@ -56,6 +56,47 @@
                 }
             })
 
+            $.bindEvent(".main-sub", "dblclick", (e, from) => {
+                if (e.shiftKey) {
+                    // 标题
+                    let title = from.querySelector(".sub-title h1")
+                    title.contentEditable = true
+                    
+                    // 内容
+                    let target = from.querySelector(".sub-desc")
+                    let subId = target.dataset.id
+                    let subData = this.model.sub
+
+                    target.textContent = subData.subDesc
+                    target.contentEditable = true
+                    target.style.whiteSpace = 'pre-line'
+
+                    let editBtn = document.createElement("button")
+                    editBtn.innerText = "保存"
+                    editBtn.classList.add("sub-save-btn")
+                    from.append(editBtn)
+
+                    editBtn.onclick = () => {
+                        let subDesc = target.textContent
+                        let subTitle = title.textContent
+
+                        $.request("https://my.snowtraces.com/qa/api/v1/sub", {subId, subDesc, subTitle}, "PUT")
+                            .then((res) => {
+                                if (res.success) {
+                                    target.innerHTML = subDesc
+                                    target.contentEditable = false
+                                    target.style.whiteSpace = 'inherit'
+                                    title.contentEditable = false
+                                    editBtn.remove()
+
+                                    subData.subDesc = subDesc
+                                    Prism.highlightAll()
+                                }
+                            })
+                    }
+                }
+            })
+
         },
         bindEventHub() {
             window.eventHub.on(routes.sub.event, (subId) => {
@@ -69,7 +110,7 @@
                 this.model.sub = sub
                 $.el(".main-sub").innerHTML = `
                     <div class="sub-title" data-id="${sub.subId}"><h1>${sub.subTitle}</h1></div>
-                    <div class="sub-desc">${sub.subDesc}</div>
+                    <div class="sub-desc" data-id="${sub.subId}">${sub.subDesc}</div>
                     <div class="author">${sub.addByName}</div>`
 
                 if (sub.ansList.length) {
