@@ -115,7 +115,7 @@
 
                 if (sub.ansList.length) {
                     $.el(".main-ans-list").innerHTML = sub.ansList.map(ans => `
-                        <div class="ans" data-id="${ans.ansId}">
+                        <div class="ans ${ans.accepted === '1' ? 'accepted' : ''}" data-id="${ans.ansId}">
                             <div class="ans-desc">${ans.ansDesc}</div>
                             <div class="author">${ans.addByName}</div>
                         </div>

@@ -58,4 +58,14 @@ public class AnsGetOutputDto implements Serializable {
      */
     private String srcId;
 
+    /**
+     * 投票数值
+     */
+    private Integer voteCount;
+
+    /**
+     * 是否采纳
+     */
+    private Integer accepted;
+
 }

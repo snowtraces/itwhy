@@ -80,6 +80,8 @@ public class AnsServiceImpl extends ServiceImpl<AnsMapper, Ans> implements AnsSe
             ans.setAddAt(LocalDateTime.now());
             ans.setAddBy(user.getUserId());
             ans.setSubId(inputDto.getSubId());
+            ans.setVoteCount(inputDto.getVoteCount());
+            ans.setAccepted(inputDto.getAccepted());
             super.saveOrUpdate(ans);
 
             return new AnsSaveOutputDto(ans.getAnsId());
@@ -104,6 +106,7 @@ public class AnsServiceImpl extends ServiceImpl<AnsMapper, Ans> implements AnsSe
     public List<AnsGetOutputDto> listBySubId(Long subId) {
         List<Ans> list = new LambdaQueryChainWrapper<>(baseMapper)
                 .eq(Ans::getSubId, subId)
+                .orderByDesc(Ans::getVoteCount)
                 .list();
 
         if (list != null && !list.isEmpty()) {

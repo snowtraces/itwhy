@@ -55,6 +55,16 @@ public class Ans implements Serializable {
     private LocalDateTime addAt;
 
     /**
+     * 投票数值
+     */
+    private Integer voteCount;
+
+    /**
+     * 是否采纳
+     */
+    private Integer accepted;
+
+    /**
      * 来源ID
      */
     private String srcId;

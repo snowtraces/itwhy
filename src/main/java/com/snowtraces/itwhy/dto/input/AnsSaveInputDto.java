@@ -30,5 +30,15 @@ public class AnsSaveInputDto extends BaseSrcDto implements Serializable {
      * 回答详情
      */
     private String ansDesc;
-    
+
+    /**
+     * 投票数值
+     */
+    private Integer voteCount;
+
+    /**
+     * 是否采纳
+     */
+    private Integer accepted;
+
 }

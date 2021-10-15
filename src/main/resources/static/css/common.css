@@ -74,7 +74,11 @@ a {
     text-decoration: none;
 }
 
-*:not(pre) > code {
+code {
+    font-family: inherit;
+}
+
+*:not(pre):not(h1):not(h2):not(h3):not(h4) > code {
     font-family: var(--ff-mono);
     font-size: 0.875rem;
     padding: 3px 4px;

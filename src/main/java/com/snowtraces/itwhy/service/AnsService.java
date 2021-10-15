@@ -36,6 +36,12 @@ public interface AnsService extends IService<Ans> {
      */
     AnsGetOutputDto get(AnsGetInputDto inputDto);
 
+    /**
+     * 按话题ID查询
+     *
+     * @param subId
+     * @return
+     */
     List<AnsGetOutputDto> listBySubId(Long subId);
 
     /**
