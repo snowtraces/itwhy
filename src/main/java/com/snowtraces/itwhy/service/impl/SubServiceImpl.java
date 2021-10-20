@@ -131,6 +131,7 @@ public class SubServiceImpl extends ServiceImpl<SubMapper, Sub> implements SubSe
     @Override
     public List<SubListOutputDto> list(SubListInputDto inputDto) {
         String query = inputDto.getQuery();
+        String tag = inputDto.getTag();
         List<Sub> subList = new LambdaQueryChainWrapper<>(baseMapper)
                 .select(Sub::getSubId,
                         Sub::getSubTitle,
@@ -138,6 +139,7 @@ public class SubServiceImpl extends ServiceImpl<SubMapper, Sub> implements SubSe
                         Sub::getAddAt,
                         Sub::getTags)
                 .like(query != null && !query.isEmpty(), Sub::getSubTitle, query)
+                .like(tag != null && !tag.isEmpty(), Sub::getTags, tag)
                 .orderByDesc(Sub::getAddAt)
                 .list();
         if (subList == null || subList.isEmpty()) {
@@ -160,6 +162,11 @@ public class SubServiceImpl extends ServiceImpl<SubMapper, Sub> implements SubSe
                 .set(Sub::getSubTitle, inputDto.getSubTitle())
                 .update();
         return new SubSaveOutputDto(inputDto.getSubId());
+    }
+
+
+    public static void main(String[] args) {
+        // \u000d System.out.println("Hello World!");
     }
 
 }

@@ -26,41 +26,54 @@
 #main-wrapper #home-list {
   margin-top: 20px;
   border-radius: 3px;
+  position: relative;
 }
 #main-wrapper #home-list .item {
   background: #fff;
+  box-shadow: 1px 1px 3px -1px #999;
   margin-bottom: 1px;
-  display: flex;
-}
-#main-wrapper #home-list .item .item-tags {
-  flex: 0 0 auto;
-  display: none;
-}
-#main-wrapper #home-list .item .item-tags a {
-  padding: 3px 5px;
-  background: #eee;
-  border-radius: 3px;
+  position: absolute;
 }
 #main-wrapper #home-list .item .item-title {
-  flex: 1 1 auto;
+  width: 100%;
 }
 #main-wrapper #home-list .item .item-title a {
-  display: inline-block;
-  padding: 8px 12px;
+  display: block;
+  padding: 12px;
   width: 100%;
-  transition: all 0.3s;
+  font-weight: 600;
 }
 #main-wrapper #home-list .item .item-title a:hover {
   background: #eee;
+}
+#main-wrapper #home-list .item .item-tags {
+  padding: 6px;
+  border-top: 1px solid #cccccc;
+}
+#main-wrapper #home-list .item .item-tags a {
+  padding: 1px 5px;
+  margin: 0 3px 3px 0;
+  font-size: 0.875rem;
+  border-radius: 2px;
+  display: inline-block;
+  background: #f2f2f2;
+}
+#main-wrapper #home-list .item .item-tags a:hover {
+  background: #cccccc;
 }
 #main-wrapper .main-sub {
   margin-top: 20px;
   margin-bottom: 20px;
   background: #fff;
-  padding: 8px 16px;
   border-radius: 3px;
   box-shadow: 1px 1px 8px 0 #ddd;
   position: relative;
+}
+#main-wrapper .main-sub .sub-title {
+  padding: 8px 16px;
+  background: #333333;
+  color: #ffffff;
+  border-radius: 3px 3px 0 0;
 }
 #main-wrapper .main-sub .sub-save-btn {
   position: absolute;
@@ -71,7 +84,7 @@
   opacity: 0.8;
 }
 #main-wrapper .main-sub .sub-desc {
-  margin-top: 10px;
+  padding: 5px 16px;
   line-height: 1.5;
 }
 #main-wrapper .main-sub .sub-desc a {
@@ -100,6 +113,7 @@
   overflow-x: auto;
   font-family: var(--ff-mono);
   font-size: 13px;
+  max-height: 500px;
 }
 #main-wrapper .main-sub .sub-desc pre > code {
   font-family: inherit;
@@ -110,16 +124,15 @@
   padding-left: 0.75rem;
 }
 #main-wrapper .main-ans-list .ans {
-  padding: 8px 16px;
   margin-bottom: 16px;
   background: #fff;
   border-radius: 3px;
   box-shadow: 1px 1px 8px 0 #ddd;
+  border-top: 6px solid #999999;
   position: relative;
-  border-top: 4px solid #999999;
 }
 #main-wrapper .main-ans-list .ans.accepted {
-  border-top: 4px solid green;
+  border-top: 6px solid green;
 }
 #main-wrapper .main-ans-list .ans .ans-save-btn {
   position: absolute;
@@ -131,6 +144,9 @@
 }
 #main-wrapper .main-ans-list .ans:hover:after {
   opacity: 1;
+}
+#main-wrapper .main-ans-list .ans .ans-desc {
+  padding: 8px 16px;
 }
 #main-wrapper .main-ans-list .ans .ans-desc a {
   color: #0a95ff;
@@ -158,6 +174,7 @@
   overflow-x: auto;
   font-family: var(--ff-mono);
   font-size: 13px;
+  max-height: 500px;
 }
 #main-wrapper .main-ans-list .ans .ans-desc pre > code {
   font-family: inherit;

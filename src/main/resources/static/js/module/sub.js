@@ -61,7 +61,7 @@
                     // 标题
                     let title = from.querySelector(".sub-title h1")
                     title.contentEditable = true
-                    
+
                     // 内容
                     let target = from.querySelector(".sub-desc")
                     let subId = target.dataset.id
@@ -99,9 +99,11 @@
 
         },
         bindEventHub() {
-            window.eventHub.on(routes.sub.event, (subId) => {
-                this.view.render(this.model.data)
-                this.onload(subId)
+            window.eventHub.on(routes.sub.event, ({value, loadView}) => {
+                if (loadView) {
+                    this.view.render(this.model.data)
+                }
+                this.onload(value)
             })
         },
         onload(subId) {

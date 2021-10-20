@@ -65,5 +65,10 @@ let routes = {
         event: "open-sub",
         path: "./#/sub/"
     },
+    "tag": {
+        name: "问题",
+        event: "search-tag",
+        path: "./#/tag/"
+    },
 }
 

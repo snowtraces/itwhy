@@ -20,4 +20,9 @@ public class SubListInputDto {
      * 查询关键字
      */
     private String query;
+
+    /**
+     * 标签
+     */
+    private String tag;
 }

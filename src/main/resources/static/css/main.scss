@@ -33,37 +33,49 @@ $max-width: 900px;
   #home-list {
     margin-top: 20px;
     border-radius: 3px;
+    position: relative;
 
     .item {
       background: #fff;
+      box-shadow: 1px 1px 3px -1px #999;
       margin-bottom: 1px;
-      display: flex;
+      position: absolute;
 
-      .item-tags {
-        flex: 0 0 auto;
-        display: none;
-
-        a {
-          padding: 3px 5px;
-          background: #eee;
-          border-radius: 3px;
-        }
-      }
 
       .item-title {
-        flex: 1 1 auto;
+        width: 100%;
 
         a {
-          display: inline-block;
-          padding: 8px 12px;
+          display: block;
+          padding: 12px;
           width: 100%;
-          transition: all 0.3s;
+          font-weight: 600;
 
           &:hover {
             background: #eee;
           }
         }
       }
+
+      .item-tags {
+        padding: 6px;
+        border-top: 1px solid #cccccc;
+
+        a {
+          padding: 1px 5px;
+          margin: 0 3px 3px 0;
+          font-size: 0.875rem;
+          border-radius: 2px;
+          display: inline-block;
+          background: #f2f2f2;
+          
+          &:hover {
+            background: #cccccc;
+          }
+        }
+      }
+
+
     }
   }
 
@@ -80,6 +92,7 @@ $max-width: 900px;
     overflow-x: auto;
     font-family: var(--ff-mono);
     font-size: 13px;
+    max-height: 500px;
     > code {
       font-family: inherit;
     }
@@ -110,13 +123,15 @@ $max-width: 900px;
     margin-top: 20px;
     margin-bottom: 20px;
     background: #fff;
-    padding: 8px 16px;
     border-radius: 3px;
     box-shadow: 1px 1px 8px 0 #ddd;
     position: relative;
 
     .sub-title {
-
+      padding: 8px 16px;
+      background: #333333;
+      color: #ffffff;
+      border-radius: 3px 3px 0 0;
     }
 
     .sub-save-btn {
@@ -129,7 +144,7 @@ $max-width: 900px;
     }
 
     .sub-desc {
-      margin-top: 10px;
+      padding: 5px 16px;
       line-height: 1.5;
 
       a {
@@ -152,16 +167,16 @@ $max-width: 900px;
 
   .main-ans-list {
     .ans {
-      padding: 8px 16px;
       margin-bottom: 16px;
       background: #fff;
       border-radius: 3px;
       box-shadow: 1px 1px 8px 0 #ddd;
+      border-top: 6px solid #999999;
       position: relative;
-      border-top: 4px solid #999999;
-      
+
       &.accepted {
-        border-top: 4px solid green;
+        border-top: 6px solid green;
+        //box-shadow: 1px 1px 8px 0 green;
       }
 
       .ans-save-btn {
@@ -193,6 +208,8 @@ $max-width: 900px;
       }
 
       .ans-desc {
+        padding: 8px 16px;
+
         a {
           @include content-a()
         }
