@@ -4,7 +4,8 @@
         template: `
         <div id="home-search">
             <div class="search">
-                <input type="search" name="keyword" autocomplete="off" placeholder="搜索...">
+                <input type="search" name="keyword" autocomplete="off" placeholder="搜索..." 
+                value="\${data.tag ? \`[\${data.tag}]\` : ''}\${data.query ? \` \${data.query}\` : ''}">
             </div>
         </div>
         <div id="home-list">
@@ -14,7 +15,9 @@
         }
     }
 
-    let model = {}
+    let model = {
+        filter: {}
+    }
 
     let controller = {
         init(view, model) {
@@ -24,31 +27,40 @@
             this.bindEventHub()
         },
         bindEvents: function () {
-            $.bindEvent('.search > input', 'keyup', (e) => {
-                if (e.code === "Enter") {
-                    this.onload($.el('.search > input').value)
+            $.bindEvent('.search > input', 'change', (e) => {
+                let search = $.el('.search > input').value
+                window.location = search ? `./#/search/${search}` : './'
+                if (search) {
+                    let match = search.match(/(\[([^\]]+)\])? ?(.*)/)
+                    this.model.filter.tag = match[2] || ''
+                    this.model.filter.query = match[3] || ''
+                    this.onload()
                 }
             })
         },
         bindEventHub() {
             window.eventHub.on(routes.home.event, () => {
-                this.view.render(this.model.data)
+                this.view.render(this.model.filter)
                 this.onload()
                 this.bindEvents()
             })
 
-            window.eventHub.on(routes.tag.event, ({value, loadView}) => {
-                if (loadView) {
-                    this.view.render(this.model.data)
+            window.eventHub.on(routes.search.event, ({value, loadView}) => {
+                if (value) {
+                    let match = value.match(/(\[([^\]]+)\])? ?(.*)/)
+                    this.model.filter.tag = match[2] || ''
+                    this.model.filter.query = match[3] || ''
+
+                    if (loadView) {
+                        this.view.render(this.model.filter)
+                    }
+                    this.onload()
                 }
-                this.onload(null, value)
+
             })
         },
-        onload(query, tag) {
-            $.get("https://my.snowtraces.com/qa/api/v1/sub/list", {
-                query: query || "",
-                tag: tag || ""
-            }).then((res) => {
+        onload() {
+            $.get("https://my.snowtraces.com/qa/api/v1/sub/list", this.model.filter).then((res) => {
                 let dataList = res.data || []
                 $.el("#home-list").innerHTML = dataList.map(x => `
                     <div class="item">
@@ -56,7 +68,7 @@
                             <a href="./#/sub/${x.subId}">${x.subTitle}</a>
                         </div>
                         <div class="item-tags ${!x.tags ? "hide" : ""}">${
-                    !x.tags ? "" : x.tags.split(',').map(_t => `<a href="./#/tag/${_t}">${_t}</a>`).join("\n")
+                    !x.tags ? "" : x.tags.split(',').map(_t => `<a href="./#/search/[${_t}]">${_t}</a>`).join("\n")
                 }</div>
                     </div>
                 `).join("\n")

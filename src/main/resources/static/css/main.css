@@ -41,7 +41,7 @@
   display: block;
   padding: 12px;
   width: 100%;
-  font-weight: 600;
+  font-weight: bold;
 }
 #main-wrapper #home-list .item .item-title a:hover {
   background: #eee;
