@@ -33,6 +33,7 @@
   box-shadow: 1px 1px 3px -1px #999;
   margin-bottom: 1px;
   position: absolute;
+  border-radius: 3px;
 }
 #main-wrapper #home-list .item .item-title {
   width: 100%;
@@ -42,9 +43,11 @@
   padding: 12px;
   width: 100%;
   font-weight: bold;
+  border-radius: 3px 3px 0 0;
 }
 #main-wrapper #home-list .item .item-title a:hover {
-  background: #eee;
+  background: #333;
+  color: #fff;
 }
 #main-wrapper #home-list .item .item-tags {
   padding: 6px;
@@ -57,6 +60,9 @@
   border-radius: 2px;
   display: inline-block;
   background: #f2f2f2;
+}
+#main-wrapper #home-list .item .item-tags a.active {
+  border-bottom: 1px solid #bbbbbb;
 }
 #main-wrapper #home-list .item .item-tags a:hover {
   background: #cccccc;
@@ -119,7 +125,7 @@
   font-family: inherit;
 }
 #main-wrapper .main-sub .sub-desc blockquote {
-  border-left: 3px solid #999;
+  border-left: 3px solid #bbbbbb;
   margin: 1rem 1rem 1rem 0.5rem;
   padding-left: 0.75rem;
 }
@@ -180,7 +186,7 @@
   font-family: inherit;
 }
 #main-wrapper .main-ans-list .ans .ans-desc blockquote {
-  border-left: 3px solid #999;
+  border-left: 3px solid #bbbbbb;
   margin: 1rem 1rem 1rem 0.5rem;
   padding-left: 0.75rem;
 }

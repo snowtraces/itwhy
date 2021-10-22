@@ -5,7 +5,7 @@
         <div id="home-search">
             <div class="search">
                 <input type="search" name="keyword" autocomplete="off" placeholder="搜索..." 
-                value="\${data.tag ? \`[\${data.tag}]\` : ''}\${data.query ? \` \${data.query}\` : ''}">
+                value="\${data.tag ? \`[\${data.tag}] \` : ''}\${data.query ? \`\${data.query}\` : ''}">
             </div>
         </div>
         <div id="home-list">
@@ -40,6 +40,7 @@
         },
         bindEventHub() {
             window.eventHub.on(routes.home.event, () => {
+                this.model.filter = {}
                 this.view.render(this.model.filter)
                 this.onload()
                 this.bindEvents()
@@ -47,6 +48,7 @@
 
             window.eventHub.on(routes.search.event, ({value, loadView}) => {
                 if (value) {
+                    value = decodeURI(value)
                     let match = value.match(/(\[([^\]]+)\])? ?(.*)/)
                     this.model.filter.tag = match[2] || ''
                     this.model.filter.query = match[3] || ''
@@ -68,7 +70,8 @@
                             <a href="./#/sub/${x.subId}">${x.subTitle}</a>
                         </div>
                         <div class="item-tags ${!x.tags ? "hide" : ""}">${
-                    !x.tags ? "" : x.tags.split(',').map(_t => `<a href="./#/search/[${_t}]">${_t}</a>`).join("\n")
+                    !x.tags ? "" : x.tags.split(',')
+                        .map(_t => `<a href="./#/search/[${_t}]" class="${_t === this.model.filter.tag ? 'active' : ''}">${_t}</a>`).join("\n")
                 }</div>
                     </div>
                 `).join("\n")

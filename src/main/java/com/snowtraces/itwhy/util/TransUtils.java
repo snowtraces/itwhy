@@ -20,8 +20,9 @@ import java.util.stream.Collectors;
 public class TransUtils {
 
     public static void main(String[] args) {
-        String translated = translate(testString);
-        System.err.println(translated);
+//        String translated = translate(testString);
+//        System.err.println(translated);
+        System.err.println("< /代码></a>".replaceAll("< ?(/?) ?代码 ?>", "<$1code>"));
     }
 
     private static List<String> notTransTags = Arrays.asList("pre", "svg", "table");
@@ -47,10 +48,10 @@ public class TransUtils {
         String transSrc = segs.stream().filter(Seg::getIsTrans)
                 .map(Seg::getSrc)
                 .collect(Collectors.joining("\n<$>\n"))
+                .replaceAll("&([lg])t;", "#$1t;")
                 .replaceAll("<p>", "<p>\n")
                 .replaceAll("</p>", "\n</p>")
-                .replaceAll("<(blockquote|code)>", "<$1 translate=\"no\">")
-                .replaceAll("<a ", "<a translate=\"no\" ");
+                .replaceAll("<(blockquote)>", "<$1 translate=\"no\">");
 
         // 3. 翻译
         String translated = RequestUtils.translate(transSrc);
@@ -62,10 +63,12 @@ public class TransUtils {
                 String transText = transMeta[idx.getAndIncrement()];
                 // 4. 翻译结果清理
                 // 标签闭合，hr修正
-                transText = transText.replaceAll("< ?/ ?(a|code)>", "</$1>")
+                transText = transText.replaceAll("< ?/ ?(a|code|em|strong)>", "</$1>")
+                        .replaceAll("#([lg])t;", "&$1t;")
                         .replaceAll("< (a|code) ", "<$1 ")
+                        .replaceAll("< ?(/?) ?代码 ?>", "<$1code>")
                         .replaceAll("<小时>", "<hr>");
-                
+
                 return transText;
             } else {
                 return seg.src;
@@ -95,7 +98,7 @@ public class TransUtils {
             }
 
             String notTansString = inString.substring(first, end);
-            
+
             // 移除代码块中的span高亮内容
             if (tag.equals("pre")) {
                 notTansString = notTansString
