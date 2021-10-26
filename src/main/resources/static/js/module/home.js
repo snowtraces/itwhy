@@ -76,7 +76,7 @@
                     </div>
                 `).join("\n")
 
-                $.waterfall('#home-list', "#home-list > .item", 16)
+                $.waterfall('#home-list', 16)
             })
         },
     }

@@ -67,7 +67,8 @@ public class TransUtils {
                         .replaceAll("#([lg])t;", "&$1t;")
                         .replaceAll("< (a|code) ", "<$1 ")
                         .replaceAll("< ?(/?) ?代码 ?>", "<$1code>")
-                        .replaceAll("<小时>", "<hr>");
+                        .replaceAll("<小时>", "<hr>")
+                        .replaceAll("</一>", "</a>");
 
                 return transText;
             } else {

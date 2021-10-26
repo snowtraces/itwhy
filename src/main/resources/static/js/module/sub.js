@@ -21,7 +21,7 @@
             this.bindEvents()
             this.bindEventHub()
         },
-        bindEvents() {
+        bindEvents: function () {
             $.bindEvent(".main-ans-list .ans", "dblclick", (e, from) => {
                 if (e.shiftKey) {
                     let target = from.querySelector(".ans-desc")
@@ -36,6 +36,9 @@
                     editBtn.innerText = "保存"
                     editBtn.classList.add("ans-save-btn")
                     from.append(editBtn)
+
+                    // 绑定编辑方法
+                    target.onkeydown = (e) => this.edit.call(this, e)
 
                     editBtn.onclick = () => {
                         let ansDesc = target.textContent
@@ -75,6 +78,9 @@
                     editBtn.innerText = "保存"
                     editBtn.classList.add("sub-save-btn")
                     from.append(editBtn)
+
+                    // 绑定编辑方法
+                    target.onkeydown = (e) => this.edit.call(this, e)
 
                     editBtn.onclick = () => {
                         let subDesc = target.textContent
@@ -128,6 +134,33 @@
 
             })
 
+        },
+        edit: function (e) {
+            let keyToReplace = {
+                '`': ['<code>', '</code>'],
+                'b': ['<strong>', '</strong>']
+            }
+            let toReplace = keyToReplace[e.key];
+            if (toReplace) {
+                this.replaceSelection(e, ...toReplace)
+            }
+        },
+        replaceSelection(e, start, end) {
+            let sel = window.getSelection();
+            if (sel.rangeCount) {
+                let range = sel.getRangeAt(0);
+                let fragment = range.extractContents();
+                let oldContent = fragment.textContent
+                if (oldContent) {
+                    e.preventDefault()
+                    if (oldContent.startsWith(start) && oldContent.endsWith(end)) {
+                        fragment.textContent = fragment.textContent.substring(start.length, oldContent.length - end.length)
+                    } else {
+                        fragment.textContent = `${start}${oldContent}${end}`
+                    }
+                }
+                range.insertNode(fragment);
+            }
         }
     }
 
