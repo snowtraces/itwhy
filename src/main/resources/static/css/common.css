@@ -106,8 +106,10 @@ img {
     max-width: 100%;
 }
 
-em {
-    margin: 0 1px 0 0;
+em[lang=zh] {
+    margin: 0 2px;
+    font-family: "SimSun", "STSong", "KaiTi", "STKaiti", serif;
+    font-style: normal;
 }
 
 hr {

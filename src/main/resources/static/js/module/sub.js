@@ -21,7 +21,7 @@
             this.bindEvents()
             this.bindEventHub()
         },
-        bindEvents: function () {
+        bindEvents() {
             $.bindEvent(".main-ans-list .ans", "dblclick", (e, from) => {
                 if (e.shiftKey) {
                     let target = from.querySelector(".ans-desc")
@@ -130,10 +130,17 @@
                        `).join("\n")
                 }
                 Prism.highlightAll()
-
+                this.resetChineseStyle()
 
             })
 
+        },
+        resetChineseStyle() {
+            $.elAll(".ans-desc p em, .sub-desc p em").forEach(emItem => {
+                if (emItem.innerText && /[\u4e00-\u9fa5]/.test(emItem.innerText)) {
+                    emItem.setAttribute("lang", "zh")
+                }
+            })
         },
         edit: function (e) {
             let keyToReplace = {
