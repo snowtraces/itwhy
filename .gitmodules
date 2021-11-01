@@ -1,3 +1,6 @@
 [submodule ".\\src\\main\\resources\\static\\js\\util"]
 	path = .\\src\\main\\resources\\static\\js\\util
 	url = https://github.com/snowtraces/js-util.git
+[submodule ".\\\\src\\\\main\\\\resources\\\\static\\\\js\\\\util"]
+	path = .\\\\src\\\\main\\\\resources\\\\static\\\\js\\\\util
+	url = https://github.com/snowtraces/js-util.git
