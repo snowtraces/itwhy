@@ -76,7 +76,9 @@ public class AnsServiceImpl extends ServiceImpl<AnsMapper, Ans> implements AnsSe
             if (exist != null) {
                 ans.setAnsId(exist.getAnsId());
             }
-            ans.setAnsDesc(translate(inputDto.getAnsDesc()));
+            if (Constants.NO.equals(inputDto.getIsTrans())) {
+                ans.setAnsDesc(translate(inputDto.getAnsDesc()));
+            }
             ans.setAddAt(LocalDateTime.now());
             ans.setAddBy(user.getUserId());
             ans.setSubId(inputDto.getSubId());

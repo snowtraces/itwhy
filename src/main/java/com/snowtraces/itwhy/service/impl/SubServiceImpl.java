@@ -65,8 +65,10 @@ public class SubServiceImpl extends ServiceImpl<SubMapper, Sub> implements SubSe
             SubSrc subSrc = new SubSrc();
             subSrc.setSrcId(srcId);
             subSrc.setIsTrans(Constants.YES);
-            subSrc.setSubTitle(inputDto.getSubTitle());
-            subSrc.setSubDesc(inputDto.getSubDesc());
+            if (Constants.NO.equals(inputDto.getIsTrans())) {
+                subSrc.setSubTitle(inputDto.getSubTitle());
+                subSrc.setSubDesc(inputDto.getSubDesc());
+            }
             subSrcService.saveOrUpdate(subSrc);
 
             // 2. 写用户信息

@@ -41,4 +41,9 @@ public class AnsSaveInputDto extends BaseSrcDto implements Serializable {
      */
     private Integer accepted;
 
+    /**
+     * 是否翻译
+     */
+    private Integer isTrans;
+
 }

@@ -34,4 +34,9 @@ public class SubSaveInputDto extends BaseSrcDto implements Serializable {
      */
     private String tags;
 
+    /**
+     * 是否翻译
+     */
+    private Integer isTrans;
+
 }
